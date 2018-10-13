@@ -46,6 +46,16 @@ Response
     token : String
 }
 
+Errors
+
+{
+	message : 'User not found'
+}
+
+{
+	message : 'Wrong password'
+}
+
 ```
 
 ### #Registeration
@@ -60,7 +70,7 @@ Request
     name : String
 }
 
-Response 
+Response
 
 {
     _id : ObjectID,
@@ -69,10 +79,22 @@ Response
     token : String
 }
 
+Errors
+
+{
+	message : 'Email exists'
+}
+
 ```
 
 ```
 This token will be used on authorizon field of each request header
+
+Error
+
+{
+	message : 'Invalid Token'
+}
 ```
 
 ### #User Information
@@ -98,7 +120,7 @@ Reponse status code 200
 ```
 [GET] /api/users/{userId}
 
-Response 
+Response
 
 {
     categories : {

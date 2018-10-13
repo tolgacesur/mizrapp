@@ -1,20 +1,80 @@
-from flask import Flask
-from pymongo import MongoClient
+from flask import Flask, request, jsonify
+from bson.json_util import dumps
 from bson.objectid import ObjectId
+from db import db
+import config
+import jwt
+import hashlib
 
 app = Flask(__name__)
 
-db_host = 'localhost'
-db_port = 27017
-database_user = 'admin'
-database_pass = 'mizrap12345678'
+# TODO : All requests inputs are going to validate
 
-db = MongoClient(db_host, db_port).mizrapp
-db.authenticate(database_user, database_pass)
+@app.route('/login', methods=['POST'])
+def login():
+	# Convert request to json format
+	json = request.get_json()
+
+	# Get user from db
+	user = db.users.find_one({'email' :	json.get('email')})
+
+	if user:
+		# Check password
+		if user['password'] == hashlib.sha256(json.get('password').encode('utf-8')).hexdigest():
+
+			user['_id'] = str(user['_id'])
+
+			token = {
+				"_id" : user['_id']
+			}
+
+			# Generate token
+			user['token'] = jwt.encode(token, config.jwt_secret, algorithm='HS256').decode("utf-8")
+			return jsonify(user)
+		else :
+			return jsonify({'message' : 'Wrong password'}), 400
+	else :
+		return jsonify({'message' : 'User not found'}), 404
+
+
+@app.route('/register', methods=['POST'])
+def register():
+	# Convert request to json format
+	json = request.get_json()
+
+	# Get user from db
+	user = db.users.find_one({'email' : json.get('email')})
+
+	if user:
+		return jsonify({'message' : 'Email exists'}), 409
+
+	# Hash password
+	password = hashlib.sha256(json.get('password').encode('utf-8')).hexdigest()
+
+	user = {
+		'name' : json.get('name'),
+		'email' : json.get('email'),
+		'password' : password
+	}
+
+	# Save user
+	userId = db.users.insert(user)
+
+	token = {
+		'_id' : str(userId)
+	}
+
+	user['_id'] = str(userId)
+
+	# Generate token
+	user['token'] = jwt.encode(token, config.jwt_secret, algorithm='HS256').decode("utf-8")
+
+	return jsonify(user)
+
 
 @app.route('/api/users/<string:userId>', methods=['GET'])
 def getUser(userId):
-	db.users.find_one({"_id" : ObjectId(userId)})
+	db.users.find_one({'_id' : ObjectId(userId)})
 
 	# Fetch all categories in db
 	categories = db.categories.find({})
@@ -38,12 +98,12 @@ def getUser(userId):
 		category['subCategories'] = listOfSubCategories
 
 	# Fetch all reviews belong to user
-	reviews = db.reviews.find({"user" : ObjectId(userId)})
+	reviews = db.reviews.find({'user' : ObjectId(userId)})
 
 	# Return response data
 	reponse = {
 		'categories' : categories,
-		'reviews' : revies
+		'reviews' : reviews
 	}
 
 	return response
@@ -52,11 +112,37 @@ def getUser(userId):
 @app.route('/api/products/<string:subCategoryId>', methods=['GET'])
 def getProducts(subCategoryId):
 
-	products = db.products.find({"subCategoryId" : ObjectId(subCategoryId)})
+	# Fetch products
+	products = db.products.find({'subCategoryId' : ObjectId(subCategoryId)})
 
 	return {
 		'products' : products
 	}
+
+
+
+@app.before_request
+def check_auth_token():
+	# Dont check token for login and register endpoints
+	if request.path in ('/login', '/register'):
+			return
+
+	# Get token from request header
+	token = request.headers.get('AUTHORIZATION')
+	if token is None:
+		return jsonify({'message' : 'Invalid Token'})
+
+	token = token.encode('utf-8')
+
+	# Decode and verify token
+	try:
+		user = jwt.decode(token.decode('utf-8'), config.jwt_secret, algorithms=['HS256'])
+		if user:
+			return
+		else:
+			return jsonify({'message' : 'Invalid Token'})
+	except:
+		return jsonify({'message' : 'Invalid Token'})
 
 
 if __name__ == '__main__':
