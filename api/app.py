@@ -72,6 +72,39 @@ def register():
 	return jsonify(user)
 
 
+@app.route('/api/user/info', methods=['POST'])
+def api():
+
+    json = request.get_json()
+
+    info = {
+        "user" : ObjectId(json.get('user')),
+        "age" : json.get('age'),
+        "profession" : json.get('profession'),
+        "gender" : json.get('gender'),
+        "city" : json.get('city'),
+    }
+
+    infoId = db.user_info.insert(info)
+    info['_id'] = infoId
+
+    return dumps(info)
+
+@app.route('/api/product/review', methods=['POST'])
+def review():
+
+    json = request.get_json()
+
+    review= {
+        "product" : json.get('product'),
+        "isUsed" : json.get('isUsed'),
+        "rank" : json.get('rank'),
+        "MinPrice" : json.get('MinPrice'),
+        "user" : json.get('user'),
+    }
+
+    reviewId = db.reviews.insert(review)
+
 @app.route('/api/users/<string:userId>', methods=['GET'])
 def getUser(userId):
 	db.users.find_one({'_id' : ObjectId(userId)})
