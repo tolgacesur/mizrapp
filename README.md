@@ -46,6 +46,16 @@ Response
     token : String
 }
 
+Errors
+
+{
+	message : 'User not found'
+}
+
+{
+	message : 'Wrong password'
+}
+
 ```
 
 ### #Registeration
@@ -60,7 +70,7 @@ Request
     name : String
 }
 
-Response 
+Response
 
 {
     _id : ObjectID,
@@ -69,10 +79,22 @@ Response
     token : String
 }
 
+Errors
+
+{
+	message : 'Email exists'
+}
+
 ```
 
 ```
 This token will be used on authorizon field of each request header
+
+Error
+
+{
+	message : 'Invalid Token'
+}
 ```
 
 ### #User Information
@@ -96,9 +118,9 @@ Reponse status code 200
 
 ### #Initial App Data
 ```
-[GET] /api/user/{userId}
+[GET] /api/users/{userId}
 
-Response 
+Response
 
 {
     categories : {
@@ -112,9 +134,18 @@ Response
                 }
             ]
         }
-    }
-
-    ...
+    },
+    reviews : [
+			{
+				_id : ObjectID,
+				product : ObjectID,
+				isUsed : boolean,
+				rank : integer | 1 to 5,
+				minPrice : integer | lira,
+				maxPrice : integer | lira,
+				user : ObjectID
+			}
+		]
 }
 ```
 
@@ -195,7 +226,7 @@ response status code 200
 {
     _id : ObjectID,
     name : String,
-    companies : Array
+    subCategories : Array | ObjectID
 }
 ```
 
@@ -205,8 +236,7 @@ response status code 200
 {
     _id : ObjectID,
     name : String,
-    logo : String,
-    subCategories : Array
+    logo : String
 }
 ```
 
