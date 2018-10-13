@@ -4,6 +4,26 @@
 A repository for the hackathon project
 ```
 
+## Setup Restfull service
+
+```
+Run this command inside api folder 
+
+Create virtual env
+
+	virtualenv venv
+
+Actviate virtual env
+
+	source venv/bin/activate
+
+Install requirements
+
+	pip3 install -r requirements.txt
+
+
+```
+
 ## Documentation of our restfull API
 
 ### #Login
