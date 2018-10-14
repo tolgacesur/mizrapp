@@ -5,7 +5,8 @@ import Stars from 'react-native-stars';
 import RadioForm, {} from 'react-native-simple-radio-button';
 import { Sae } from 'react-native-textinput-effects';
 import FontAwesomeIcon from 'react-native-vector-icons/FontAwesome';
-import { KeyboardAwareView } from 'react-native-keyboard-aware-view'
+import { KeyboardAwareView } from 'react-native-keyboard-aware-view';
+import { HttpService } from '../../services/HttpService';
 var radio_props = [
     {label: 'Evet', value: 1},
     {label: 'Hayır', value: 0 }
@@ -15,11 +16,11 @@ class RePrice extends React.Component {
     constructor(props){
         super(props);
         this.state={
-          checked:null,
           value:null,
           stars:null,
           ok:null,
-          price:null
+					price:null,
+					product : null
         }
     }
 
@@ -28,8 +29,25 @@ class RePrice extends React.Component {
     }
 
     sendToPrice () {
+			let review = {
+				product : this.state.product._id,
+				isUsed : this.state.value,
+				rank : this.state.stars,
+				offer : this.state.price,
+				user : '5bc23edf0ffcf001ed8eac73'
+			}
+			console.log(review)
+			HttpService().post('https://mizrapp.herokuapp.com/api/products/review', review).then(() => {
+				this.props.navigation.navigate('categoryScreen');
+			})
+		}
+		
+		componentWillMount() {
+			this.setState({
+				product : this.props.navigation.state.params.product
+			});
+		}
 
-    }
     questions () {
         if(this.state.value==null){
             return (
@@ -64,7 +82,8 @@ class RePrice extends React.Component {
         else if(this.state.ok==null){
             return (
                 <View style={{alignItems:'center'}}>
-                 <TextInput
+								<Text style={{marginBottom: 5}} >Minimum Fiyat </Text>
+                 <TextInput value={this.state.price}
                       style={{width:200}}
                  />
                  <TouchableOpacity  onPress={this.sendToPrice()}>
@@ -82,27 +101,27 @@ class RePrice extends React.Component {
       behavior="padding"
     >
      <ScrollView>
-        <View style={{paddingLeft:'50%'}}>
+        <View style={{alignItems : 'center'}}>
             <Text style={{fontFamily:'tipopepel'}}>Ürün Adı</Text>
-            <Text>Apple</Text>
+            <Text>{this.state.product.name}</Text>
         </View>
         <View>
             <Image
             style={{width:'97%', height: 200,position:'absolute',flex: 1,margin:5}}
-            source={{uri: 'https://cdn.pixabay.com/photo/2015/05/02/08/02/angel-749625__340.jpg'}}
+            source={{uri: 'https://mizrapp.herokuapp.com/api/images/' + this.state.product._id + '.' + this.state.product.type}}
             />
             <Image
             style={{width: 80, height: 40, position:'relative',marginTop:160,marginLeft:5}}
-            source={{uri: 'https://botw-pd.s3.amazonaws.com/styles/logo-thumbnail/s3/0011/0212/brand.gif?itok=K_43GRzA'}}
+            source={{uri: 'https://mizrapp.herokuapp.com/api/images/' + this.state.product.company._id + '.' + this.state.product.company.type}}
             />  
         </View>
-        <View style={{paddingLeft:'50%',marginTop:5}}>
+        <View style={{alignItems : 'center',marginTop:5}}>
             <Text >Açıklama</Text>
-            <Text>16 Gb</Text>
+            <Text>{this.state.product.desc}</Text>
         </View>
-        <View style={{paddingLeft:'50%',marginTop:5}}>
+        <View style={{alignItems : 'center',marginTop:5}}>
             <Text>Fiyat</Text>
-            <Text style={{flexDirection:'row'}}>50₺</Text>
+            <Text style={{flexDirection:'row'}}>{this.state.product.price}₺</Text>
         </View>
         {this.questions()}
         </ScrollView>
