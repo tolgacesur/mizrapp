@@ -1,5 +1,4 @@
 from flask import Flask, request, jsonify
-from bson.json_util import dumps
 from bson.objectid import ObjectId
 from db import db
 import config
@@ -65,6 +64,7 @@ def register():
 	}
 
 	user['_id'] = str(userId)
+	del user['password']
 
 	# Generate token
 	user['token'] = jwt.encode(token, config.jwt_secret, algorithm='HS256').decode("utf-8")
@@ -75,84 +75,117 @@ def register():
 @app.route('/api/user/info', methods=['POST'])
 def api():
 
-    json = request.get_json()
+		json = request.get_json()
 
-    info = {
-        "user" : ObjectId(json.get('user')),
-        "age" : json.get('age'),
-        "profession" : json.get('profession'),
-        "gender" : json.get('gender'),
-        "city" : json.get('city'),
-    }
+		info = {
+				"user" : ObjectId(json.get('user')),
+				"age" : json.get('age'),
+				"profession" : json.get('profession'),
+				"gender" : json.get('gender'),
+				"city" : json.get('city'),
+		}
 
-    infoId = db.user_info.insert(info)
-    info['_id'] = infoId
-
-    return dumps(info)
-
-@app.route('/api/product/review', methods=['POST'])
-def review():
-
-    json = request.get_json()
-
-    review= {
-        "product" : json.get('product'),
-        "isUsed" : json.get('isUsed'),
-        "rank" : json.get('rank'),
-        "MinPrice" : json.get('MinPrice'),
-        "user" : json.get('user'),
-    }
-
-    reviewId = db.reviews.insert(review)
+		infoId = db.user_info.insert(info)
+		info['_id'] = str(infoId)
+		info['user'] = json.get('user')
+		return jsonify(info)
 
 @app.route('/api/users/<string:userId>', methods=['GET'])
 def getUser(userId):
-	db.users.find_one({'_id' : ObjectId(userId)})
 
-	# Fetch all categories in db
-	categories = db.categories.find({})
+	# Fetch all categories in db as list
+	categories = list(db.categories.find({}))
 
 	# Get all subCategory id of all categories
 	subCategoryIds = []
 	for category in categories:
-		subCategoryIds += categories['subCategories']
+		category['_id'] = str(category['_id'])
+		subCategoryIds += category['subCategories']
 
-	# Fetch all subCategories
-	subCategories = db.subCategories.find({"_id" : subCategoryIds})
+	# Fetch all subCategories as list
+	subCategories = list(db.subCategories.find({"_id" : {"$in" : subCategoryIds}}))
 
 	# Match categories with their subCategories
 	for category in categories:
 		listOfSubCategories = []
 		for subCategory in subCategories:
 			if subCategory['_id'] in category['subCategories']:
+				subCategory['_id'] = str(subCategory['_id'])
 				listOfSubCategories.append(subCategory)
 
 		# Assign matched subCategories list to category
 		category['subCategories'] = listOfSubCategories
 
 	# Fetch all reviews belong to user
-	reviews = db.reviews.find({'user' : ObjectId(userId)})
+	reviews = list(db.reviews.find({'user' : ObjectId(userId)}))
+
+	# Convert objectId to string
+	for review in reviews:
+		review['_id'] = str(review['_id'])
 
 	# Return response data
-	reponse = {
+	response = {
 		'categories' : categories,
 		'reviews' : reviews
 	}
 
-	return response
+	return jsonify(response)
 
 
 @app.route('/api/products/<string:subCategoryId>', methods=['GET'])
 def getProducts(subCategoryId):
 
 	# Fetch products
-	products = db.products.find({'subCategoryId' : ObjectId(subCategoryId)})
+	products = list(db.products.find({'subCategory' : ObjectId(subCategoryId)}))
 
-	return {
+	# Store companyIds and subCategoryIds
+	companyIds = []
+	subCategoryIds = []
+	for product in products:
+		companyIds.append(product['company'])
+		subCategoryIds.append(product['subCategory'])
+
+	# Fetch all company and subcategory details with ids
+	companies = list(db.companies.find({'_id' : {'$in':companyIds}}))
+	subCategories = list(db.subCategories.find({'_id' : {'$in' : subCategoryIds}}))
+
+	# Map product with company and subcategory details
+	for product in products:
+
+		product['_id'] = str(product['_id'])
+
+		for company in companies:
+			if str(company['_id']) == str(product['company']):
+				company['_id'] = str(company['_id'])
+				product['company'] = company
+
+		for subCategory in subCategories:
+			if str(subCategory['_id']) == str(product['subCategory']):
+				subCategory['_id'] = str(subCategory['_id'])
+				product['subCategory'] = subCategory
+
+	response = {
 		'products' : products
 	}
 
+	return jsonify(response)
 
+@app.route('/api/products/review', methods=['POST'])
+def review():
+	json = request.get_json()
+
+	review= {
+		"product" : ObjectId(json.get('product')),
+		"isUsed" : json.get('isUsed'),
+		"rank" : json.get('rank'),
+		"MinPrice" : json.get('minPrice'),
+		"MaxPrice" : json.get('maxPrice'),
+		"user" : ObjectId(json.get('user')),
+	}
+
+	db.reviews.insert(review)
+
+	return jsonify({})
 
 @app.before_request
 def check_auth_token():
