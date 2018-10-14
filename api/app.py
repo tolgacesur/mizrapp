@@ -9,6 +9,11 @@ app = Flask(__name__)
 
 # TODO : All requests inputs are going to validate
 
+# Public main route
+@app.route('/', methods=['GET'])
+def index():
+	return 'welcome to mizrapp'
+
 @app.route('/login', methods=['POST'])
 def login():
 	# Convert request to json format
@@ -190,7 +195,7 @@ def review():
 @app.before_request
 def check_auth_token():
 	# Dont check token for login and register endpoints
-	if request.path in ('/login', '/register'):
+	if request.path in ('/login', '/register', '/'):
 			return
 
 	# Get token from request header

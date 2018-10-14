@@ -2,6 +2,8 @@
 
 ```
 A repository for the hackathon project
+
+https://mizrapp.herokuapp.com/
 ```
 
 ## Setup Restfull service
