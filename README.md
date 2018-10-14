@@ -2,6 +2,8 @@
 
 ```
 A repository for the hackathon project
+
+https://mizrapp.herokuapp.com/
 ```
 
 ## Setup Restfull service
@@ -163,6 +165,7 @@ Response
             name : String,
             desc : String,
             price : integer | lira,
+						discount : integer | lira,
             photo : String,
             company : ObjectID,
             subCategory : ObjectID
@@ -177,7 +180,7 @@ Response
 
 ```
 
-[POST] /api/product/review
+[POST] /api/products/review
 
 Request
 
@@ -257,6 +260,7 @@ response status code 200
     name : String,
     desc : String,
     price : integer | lira,
+		discount : integer | lira,
     photo : String,
     company : ObjectID,
     subCategory : ObjectID
