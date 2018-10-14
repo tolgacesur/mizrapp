@@ -1,5 +1,5 @@
 import React, {Component} from 'react';
-import {Text, View,Spinner ,StyleSheet,StatusBar,TouchableOpacity,Image } from 'react-native';
+import {Text, View,Spinner ,StyleSheet,StatusBar,TouchableOpacity,Image, AsyncStorage } from 'react-native';
 import FontAwesomeIcon from 'react-native-vector-icons/FontAwesome';
 import { Sae } from 'react-native-textinput-effects';
 class Login extends Component {

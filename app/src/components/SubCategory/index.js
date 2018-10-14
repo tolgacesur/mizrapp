@@ -1,41 +1,45 @@
 import React from 'react';
-import {  View,StyleSheet,ScrollView,Image, TouchableHighlight} from 'react-native';
+import {  View,StyleSheet,ScrollView,Image, TouchableHighlight, FlatList, Text} from 'react-native';
 
 class SubCategory extends React.Component {
 
-    constructor(props){
-        super(props);
-        this.state={
-          url:null
-        }
-    }
+	constructor(props){
+			super(props);
+			this.state={
+				url:null,
+				subCategories : []
+			}
+	}
 
-    componentWillMount () {
-        console.log(this.props)
-    }
+	componentWillMount() {
+		this.setState({
+			subCategories : this.props.navigation.state.params.subCategories
+		})
+	}
+
+	_keyExtractor = (item, index) => item._id;
+
+	_renderItem = ({item}) => (
+		<TouchableHighlight onPress={() => this.props.navigation.navigate('productsScreen',{subCategoryId : item._id})}>
+			{/* <Image
+
+          style={styles.circle}
+          source={{uri: 'https://cdn.pixabay.com/photo/2015/05/02/08/02/angel-749625__340.jpg'}}
+        /> */}
+			<Text>{item.name}</Text>
+    </TouchableHighlight>
+	);
 
  render() {
     const { navigate } = this.props.navigation;
      return(
-         <View>
-        <ScrollView>
-        <TouchableHighlight onPress={() => navigate('productsScreen',{id:this.state.id})}>
-           <Image
-
-          style={styles.circle}
-          source={{uri: 'https://cdn.pixabay.com/photo/2015/05/02/08/02/angel-749625__340.jpg'}}
-        />
-        </TouchableHighlight>
-           <Image
-          style={styles.circle}
-          source={{uri: 'https://cdn.pixabay.com/photo/2015/05/02/08/02/angel-749625__340.jpg'}}
-        />
-           <Image
-          style={styles.circle}
-          source={{uri: 'https://cdn.pixabay.com/photo/2015/05/02/08/02/angel-749625__340.jpg'}}
-        />
-    </ScrollView>
-         </View>
+      <View style={{}}>
+       <FlatList
+				data={this.state.subCategories}
+				keyExtractor={this._keyExtractor}
+        renderItem={this._renderItem}
+      	/>
+      </View>
      )
  }
 }
