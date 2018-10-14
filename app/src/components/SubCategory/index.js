@@ -1,9 +1,5 @@
 import React from 'react';
 import {  View,StyleSheet,ScrollView,Image, TouchableHighlight, FlatList, Text} from 'react-native';
-<<<<<<< HEAD
-
-=======
->>>>>>> 92379833404e05d7da090e1c2f19de36c8651b3b
 
 class SubCategory extends React.Component {
 
@@ -21,30 +17,11 @@ class SubCategory extends React.Component {
 		})
 	}
 
-<<<<<<< HEAD
-<<<<<<< HEAD
- render() {
-    const { navigate } = this.props.navigation;
-     return(
-         <View>
-        <ScrollView>
-        <TouchableHighlight onPress={() => navigate('productsScreen',{id:this.state.id})}>
-           <Image
-=======
-	_keyExtractor = (item, index) => item._id;
-=======
 	_keyExtractor = (item, index) => item._id;
 
 	_renderItem = ({item}) => (
 		<TouchableHighlight onPress={() => this.props.navigation.navigate('productsScreen',{subCategoryId : item._id})}>
 			{/* <Image
->>>>>>> 92379833404e05d7da090e1c2f19de36c8651b3b
-
-	_renderItem = ({item}) => (
-		<TouchableHighlight onPress={() => this.props.navigation.navigate('productsScreen',{subCategoryId : item._id})}>
-			{/* <Image
-
->>>>>>> 92379833404e05d7da090e1c2f19de36c8651b3b
           style={styles.circle}
           source={{uri: 'https://cdn.pixabay.com/photo/2015/05/02/08/02/angel-749625__340.jpg'}}
         /> */}
