@@ -188,12 +188,20 @@ Request
     product : String | {productID},
     isUsed : boolean,
     rank : integer | {1 to 5},
-    minPrice : integer | {lira},
-    maxPrice : integer | {lira},
+    offer : integer | {lira},
     user : String | {userID}
 }
 
 response status code 200
+```
+
+
+### #Get Images
+
+```
+
+[GET] /api/images/{productId}{type}
+
 ```
 
 
@@ -239,7 +247,7 @@ response status code 200
 {
     _id : ObjectID,
     name : String,
-    logo : String
+    type : String | jpg or png
 }
 ```
 
@@ -264,6 +272,7 @@ response status code 200
     photo : String,
     company : ObjectID,
     subCategory : ObjectID
+		type : String | jpg or png
 }
 ```
 
@@ -275,8 +284,7 @@ response status code 200
     product : ObjectID,
     isUsed : boolean,
     rank : integer | 1 to 5,
-    minPrice : integer | lira,
-    maxPrice : integer | lira,
+    offer : integer | lira,
     user : ObjectID
 }
 ```

@@ -1,4 +1,4 @@
-from flask import Flask, request, jsonify
+from flask import Flask, request, jsonify, make_response
 from bson.objectid import ObjectId
 from db import db
 import config
@@ -183,19 +183,31 @@ def review():
 		"product" : ObjectId(json.get('product')),
 		"isUsed" : json.get('isUsed'),
 		"rank" : json.get('rank'),
-		"MinPrice" : json.get('minPrice'),
-		"MaxPrice" : json.get('maxPrice'),
+		"offer" : json.get('offer'),
 		"user" : ObjectId(json.get('user')),
 	}
 
 	db.reviews.insert(review)
 
-	return jsonify({})
+@app.route('/api/images/<string:image>')
+def getImage(image):
+	fullpath = "./images/" + image
+
+	with open(fullpath, 'rb') as f:
+		contents = f.read()
+
+	response = make_response(contents)
+	response.content_type = "image/jpeg"
+
+	response.headers.set('Content-Type', 'image/jpeg')
+	response.headers.set(
+			'Content-Disposition', 'attachment', filename='%s' % image)
+	return response
 
 @app.before_request
 def check_auth_token():
 	# Dont check token for login and register endpoints
-	if request.path in ('/login', '/register', '/'):
+	if request.path not in ('/login', '/register', '/'):
 			return
 
 	# Get token from request header
