@@ -13,7 +13,7 @@ class Products extends React.Component {
 
 	componentWillMount() {
 		const subCategoryId = this.props.navigation.state.params.subCategoryId
-		HttpService().get(`https://mizrapp.herokuapp.com/api/products/${subCategoryId}`).then(function(res){
+		HttpService().get(`http://localhost/api/products/${subCategoryId}`).then(function(res){
 			this.setState({
 				products : res.data.products,
 			});

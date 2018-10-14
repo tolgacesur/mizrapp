@@ -14,7 +14,7 @@ class Category extends React.Component {
 
 	componentWillMount() {
 		const userId = '5bc23edf0ffcf001ed8eac73';
-		HttpService().get(`https://mizrapp.herokuapp.com/api/users/${userId}`).then(function(res){
+		HttpService().get(`http://localhost/api/users/${userId}`).then(function(res){
 			this.setState({
 				categories : res.data.categories,
 				reviews : res.data.reviews

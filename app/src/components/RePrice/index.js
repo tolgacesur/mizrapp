@@ -37,7 +37,7 @@ class RePrice extends React.Component {
 				user : '5bc23edf0ffcf001ed8eac73'
 			}
 			console.log(review)
-			HttpService().post('https://mizrapp.herokuapp.com/api/products/review', review).then(() => {
+			HttpService().post('http://localhost/api/products/review', review).then(() => {
 				this.props.navigation.navigate('categoryScreen');
 			})
 		}
@@ -52,7 +52,7 @@ class RePrice extends React.Component {
         if(this.state.value==null){
             return (
                 <View style={{paddingLeft:'20%',margin:5}}>
-                    <Text>Bu ürünü daha önce kullandınız mı? </Text>
+                    <Text style={{fontSize:15, color:'#7FDF60'}}>Bu ürünü daha önce kullandınız mı? </Text>
                     <RadioForm
                         style={{paddingLeft:'20%'}}
                         radio_props={radio_props}
@@ -82,7 +82,7 @@ class RePrice extends React.Component {
         else if(this.state.ok==null){
             return (
                 <View style={{alignItems:'center'}}>
-								<Text style={{marginBottom: 5}} >Minimum Fiyat </Text>
+								<Text style={{fontSize:15, color:'#7FDF60'}} >Minimum Fiyat </Text>
                  <TextInput value={this.state.price}
                       style={{width:200}}
                  />
@@ -102,26 +102,26 @@ class RePrice extends React.Component {
     >
      <ScrollView>
         <View style={{alignItems : 'center'}}>
-            <Text style={{fontFamily:'tipopepel'}}>Ürün Adı</Text>
+            <Text style={{fontFamily:'tipopepel',fontSize:15, color:'#7FDF60'}}>Ürün Adı</Text>
             <Text>{this.state.product.name}</Text>
         </View>
         <View>
             <Image
             style={{width:'97%', height: 200,position:'absolute',flex: 1,margin:5}}
-            source={{uri: 'https://mizrapp.herokuapp.com/api/images/' + this.state.product._id + '.' + this.state.product.type}}
+            source={{uri: 'http://localhost/api/images/' + this.state.product._id + '.' + this.state.product.type}}
             />
             <Image
             style={{width: 80, height: 40, position:'relative',marginTop:160,marginLeft:5}}
-            source={{uri: 'https://mizrapp.herokuapp.com/api/images/' + this.state.product.company._id + '.' + this.state.product.company.type}}
+            source={{uri: 'http://localhost/api/images/' + this.state.product.company._id + '.' + this.state.product.company.type}}
             />  
         </View>
         <View style={{alignItems : 'center',marginTop:5}}>
-            <Text >Açıklama</Text>
+            <Text style={{fontFamily:'tipopepel',fontSize:15, color:'#7FDF60'}} >Açıklama</Text>
             <Text>{this.state.product.desc}</Text>
         </View>
         <View style={{alignItems : 'center',marginTop:5}}>
-            <Text>Fiyat</Text>
-            <Text style={{flexDirection:'row'}}>{this.state.product.price}₺</Text>
+            <Text style={{fontFamily:'tipopepel',fontSize:15, color:'#7FDF60'}}>Fiyat</Text>
+            <Text style={{fontFamily:'tipopepel',fontSize:15, color:'#7FDF60'}} style={{flexDirection:'row'}}>{this.state.product.price}₺</Text>
         </View>
         {this.questions()}
         </ScrollView>

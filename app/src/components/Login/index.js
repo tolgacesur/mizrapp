@@ -32,12 +32,13 @@ class Login extends Component {
             <KeyboardAvoidingView
             style = {{ flex: 1 }}
             keyboardVerticalOffset = {50}
-          behavior="padding"
+            enabled
+            behavior="padding"
         >
         
            <StatusBar barStyle="light-content"/>
            <View style={styles.container}>
-           <ScrollView>
+           {/* <ScrollView> */}
            <Image
            style={{marginLeft:75}}
             source={require('../../../assets/icon.png')}
@@ -78,11 +79,11 @@ class Login extends Component {
             </Text>
         </View>
 
-        <TouchableOpacity style={styles.buttonContainer} onPress={this.loginReq.bind(this)}>
+        <TouchableOpacity style={styles.buttonText} onPress={this.loginReq.bind(this)}>
             {this.loadingOrNot()}
         </TouchableOpacity>
     
-        </ScrollView>
+        {/* </ScrollView> */}
         </View>
         </KeyboardAvoidingView>
 
@@ -98,6 +99,7 @@ const styles = StyleSheet.create({
       backgroundColor: '#ffffff',
     },
     buttonText:{
+        paddingTop:5,
         color:'#7FDF60',
         textAlign:'center',
         backgroundColor:'transparent'
