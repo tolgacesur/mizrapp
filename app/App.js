@@ -1,5 +1,5 @@
 import React from 'react'
-import {TouchableOpacity,View,Text} from 'react-native';
+import {TouchableOpacity,View,Text, AsyncStorage} from 'react-native';
 import { createStackNavigator, createDrawerNavigator,DrawerActions } from 'react-navigation'
 import Home from './src/components/Category';
 import Login from './src/components/Login';
@@ -8,8 +8,8 @@ import Profile from './src/components/Profile';
 import RePrice from './src/components/RePrice';
 import SinginUp from './src/components/SinginUp';
 import SubCategory from './src/components/SubCategory';
+import { AuthService } from './src/services/AuthService';
 import { Font,Constants } from "expo";
-
 
 const HomeStack = createStackNavigator({
   categoryScreen:{screen:Home,
@@ -90,21 +90,25 @@ const DrawerStack = createDrawerNavigator({
       'Arial': require("./assets/fonts/Arial.ttf")      
     });
       this._loadAssetsAsync();
-      this.setState({ appIsReady: true });
-    }
-    async _loadAssetsAsync() {
-      const imageAssets = cacheImages([
-        require('./assets/icon.png')  
-      ]);
-      await Promise.all([
-          ...imageAssets
-      ]);
+      this.setState(
+				{
+					appIsReady: true,
+					isAuth : AuthService().isAuth()
+				});
+	}
+	async _loadAssetsAsync() {
+		const imageAssets = cacheImages([
+			require('./assets/icon.png')
+		]);
+		await Promise.all([
+				...imageAssets
+		]);
   }
-    register(){
-      console.log("logging in... ");
-      this.setState({
-          isAuth: true
-      });
+  register(){
+			console.log("logging in... ");
+			this.setState({
+				isAuth: true
+			});
     }
  
     render() {  
