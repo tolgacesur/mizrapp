@@ -24,8 +24,10 @@ class SubCategory extends React.Component {
 			{/* <Image
           style={styles.circle}
           source={{uri: 'https://cdn.pixabay.com/photo/2015/05/02/08/02/angel-749625__340.jpg'}}
-        /> */}
-			<Text>{item.name}</Text>
+		/> */}
+		 <View style={{flex:1,flexDirection:'row',justifyContent:'flex-start', alignItems:'center', height:50}}>
+			<Text style={{paddingLeft:5,fontFamily:'tipopepel', marginLeft:35, fontSize:15, color:'#7FDF60'}}>{item.name}</Text>
+		</View>
     </TouchableHighlight>
 	);
 

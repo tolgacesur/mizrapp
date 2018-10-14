@@ -28,7 +28,9 @@ class Products extends React.Component {
           style={{width: 400, height: 200}}
           source={{uri: 'https://cdn.pixabay.com/photo/2015/05/02/08/02/angel-749625__340.jpg'}}
         /> */}
-			<Text>{item.name} {item.desc} {item.price}</Text>
+        <View style={{flex:1,flexDirection:'row',justifyContent:'flex-start', alignItems:'center', height:50}}>
+			<Text style={{paddingLeft:5,fontFamily:'tipopepel', marginLeft:35, fontSize:15, color:'#7FDF60'}}>{item.name} {item.desc} {item.price}</Text>
+        </View>
     </TouchableHighlight>
 	);
 

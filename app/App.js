@@ -48,8 +48,8 @@ const DrawerStack = createDrawerNavigator({
   }, {
     headerMode: 'float',
     navigationOptions: ({navigation}) => ({
-      headerStyle: {backgroundColor: 'green'},
-      headerLeft: <TouchableOpacity onPress={() => navigation.dispatch(DrawerActions.openDrawer()) }><Text style={{marginLeft:5}}>Menu</Text></TouchableOpacity>
+      headerStyle: {backgroundColor: '#7FDF60'},
+      headerLeft: <TouchableOpacity onPress={() => navigation.dispatch(DrawerActions.openDrawer()) }><Text style={{marginLeft:5,color:'white'}}>Menu</Text></TouchableOpacity>
     })
   })
 

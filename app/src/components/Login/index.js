@@ -1,5 +1,5 @@
 import React, {Component} from 'react';
-import {Text, View,Spinner ,StyleSheet,StatusBar,TouchableOpacity,Image, AsyncStorage } from 'react-native';
+import {Text, View,Spinner ,StyleSheet,StatusBar,TouchableOpacity,Image,ScrollView, KeyboardAvoidingView,AsyncStorage } from 'react-native';
 import FontAwesomeIcon from 'react-native-vector-icons/FontAwesome';
 import { Sae } from 'react-native-textinput-effects';
 class Login extends Component {
@@ -29,9 +29,17 @@ class Login extends Component {
     }
     render() {
         return(
-            <View style={styles.container}>
+            <KeyboardAvoidingView
+            style = {{ flex: 1 }}
+            keyboardVerticalOffset = {50}
+          behavior="padding"
+        >
+        
            <StatusBar barStyle="light-content"/>
+           <View style={styles.container}>
+           <ScrollView>
            <Image
+           style={{marginLeft:75}}
             source={require('../../../assets/icon.png')}
             />
             <Sae
@@ -39,11 +47,11 @@ class Login extends Component {
                 label={'Kullanıcı adı'}
                 iconClass={FontAwesomeIcon}
                 iconName={'user-o'}
-                iconColor={'#640595'}
+                iconColor={'#7FDF60'}
                 autoCapitalize={'none'}
                 autoCorrect={false}
-                labelStyle={{ color: '#6a0f99' }}
-                inputStyle={{ color: '#6a0f99' }}
+                labelStyle={{ color: '#7FDF60' }}
+                inputStyle={{ color: '#7FDF60' }}
                 onSubmitEditing={()=> this.passwordInput.focus()}
                 onChangeText={(text) => this.setState({username:text})}
                 value={this.state.username}
@@ -54,12 +62,12 @@ class Login extends Component {
                 label={'Parola'}
                 iconClass={FontAwesomeIcon}
                 iconName={'lock'}
-                iconColor={'#6a0f99'}
+                iconColor={'#7FDF60'}
                 // TextInput props
                 autoCapitalize={'none'}
                 autoCorrect={false}
-                labelStyle={{ color: '#6a0f99' }}
-                inputStyle={{ color: '#6a0f99' }}
+                labelStyle={{ color: '#7FDF60' }}
+                inputStyle={{ color: '#7FDF60' }}
                 ref={(input) => this.passwordInput = input}
                 onChangeText={(text) => this.setState({password:text})}
                 value={this.state.password}
@@ -73,7 +81,11 @@ class Login extends Component {
         <TouchableOpacity style={styles.buttonContainer} onPress={this.loginReq.bind(this)}>
             {this.loadingOrNot()}
         </TouchableOpacity>
-            </View>
+    
+        </ScrollView>
+        </View>
+        </KeyboardAvoidingView>
+
         ) 
     }
 }
@@ -86,7 +98,7 @@ const styles = StyleSheet.create({
       backgroundColor: '#ffffff',
     },
     buttonText:{
-        color:'#640595',
+        color:'#7FDF60',
         textAlign:'center',
         backgroundColor:'transparent'
     }
