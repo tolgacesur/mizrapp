@@ -1,20 +1,31 @@
 import React from 'react';
-import {  View,StyleSheet,ScrollView,Image } from 'react-native';
+import {  View,StyleSheet,ScrollView,Image, TouchableHighlight} from 'react-native';
 
 class SubCategory extends React.Component {
 
-    componentWillMount () {
+    constructor(props){
+        super(props);
+        this.state={
+          url:null
+        }
+    }
 
+    componentWillMount () {
+        console.log(this.props)
     }
 
  render() {
+    const { navigate } = this.props.navigation;
      return(
          <View>
         <ScrollView>
+        <TouchableHighlight onPress={() => navigate('productsScreen',{id:this.state.id})}>
            <Image
+
           style={styles.circle}
           source={{uri: 'https://cdn.pixabay.com/photo/2015/05/02/08/02/angel-749625__340.jpg'}}
         />
+        </TouchableHighlight>
            <Image
           style={styles.circle}
           source={{uri: 'https://cdn.pixabay.com/photo/2015/05/02/08/02/angel-749625__340.jpg'}}
